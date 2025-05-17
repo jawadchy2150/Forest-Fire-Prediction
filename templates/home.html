@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire Prediction System</title>
+    <style>
+        :root {
+            --primary-color: #2c6e49;
+            --secondary-color: #4c956c;
+            --accent-color: #fefee3;
+            --danger-color: #bc4749;
+            --background-color: #f4f9f4;
+            --text-color: #333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 0 50px;
+        }
+        
+        .prediction-form {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+          .result {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f0f7f1;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+        
+        .result h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .result p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .result .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            background-color: rgba(44, 110, 73, 0.1);
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 50px;
+            margin: 15px 0;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border 0.3s;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.1);
+        }
+        
+        .tooltip {
+            cursor: help;
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.7rem;
+            color: #666;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .error {
+            color: var(--danger-color);
+            background-color: rgba(188, 71, 73, 0.1);
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f7f1;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .result h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .result .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .description {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Forest Fire Prediction System</h1>
+            <p class="description">
+                This system uses a machine learning model to predict the Forest Fire Weather Index (FWI) based on environmental parameters from the Algerian Forest Fires Dataset. 
+                The model was trained on 244 instances collected from two regions of Algeria: the Bejaia region in the northeast and the Sidi Bel-abbes region in the northwest.
+                FWI is a numerical rating that represents the intensity of a potential fire, helping authorities assess wildfire risks and implement appropriate prevention measures.
+            </p>
+        </header>
+        
+        <div class="prediction-form">
+            <h2 class="form-title">Enter Environmental Parameters</h2>
+            
+            <form action="{{ url_for('index') }}" method="post">
+                <div class="input-group">
+                    <div class="form-control">
+                        <label for="Temperature">Temperature (°C) <span class="tooltip">ⓘ<span class="tooltip-text">Air temperature in Celsius</span></span></label>
+                        <input type="text" id="Temperature" name="Temperature" placeholder="e.g., 25.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="RH">Relative Humidity (%) <span class="tooltip">ⓘ<span class="tooltip-text">Percentage of moisture in the air</span></span></label>
+                        <input type="text" id="RH" name="RH" placeholder="e.g., 40.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="Ws">Wind Speed (km/h) <span class="tooltip">ⓘ<span class="tooltip-text">Wind speed in kilometers per hour</span></span></label>
+                        <input type="text" id="Ws" name="Ws" placeholder="e.g., 15.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="Rain">Rainfall (mm) <span class="tooltip">ⓘ<span class="tooltip-text">Accumulated rainfall in millimeters</span></span></label>
+                        <input type="text" id="Rain" name="Rain" placeholder="e.g., 0.5" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="FFMC">FFMC <span class="tooltip">ⓘ<span class="tooltip-text">Fine Fuel Moisture Code - indicates ease of ignition</span></span></label>
+                        <input type="text" id="FFMC" name="FFMC" placeholder="e.g., 85.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="DMC">DMC <span class="tooltip">ⓘ<span class="tooltip-text">Duff Moisture Code - represents moisture of forest floor</span></span></label>
+                        <input type="text" id="DMC" name="DMC" placeholder="e.g., 50.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="ISI">ISI <span class="tooltip">ⓘ<span class="tooltip-text">Initial Spread Index - represents rate of fire spread</span></span></label>
+                        <input type="text" id="ISI" name="ISI" placeholder="e.g., 10.0" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="Classes">Fire Danger Class <span class="tooltip">ⓘ<span class="tooltip-text">Classification of fire danger (0 & 1)</span></span></label>
+                        <input type="text" id="Classes" name="Classes" placeholder="0 for NOT FIRE, else 1" required="required" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label for="Region">Region Code <span class="tooltip">ⓘ<span class="tooltip-text">Geographical region identifier</span></span></label>
+                        <input type="text" id="Region" name="Region" required="required" />
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Calculate FWI Prediction</button>
+            </form>
+        </div>
+         {% if results is defined and results is not none %}
+        <div class="result">
+            <h2>Forest Fire Weather Index (FWI) Prediction</h2>
+            <p>Based on the provided parameters, the predicted FWI is:</p>
+            <div class="value">{{ "%.3f"|format(results) }}</div>
+            <p>Higher values indicate increased fire danger.</p>
+        </div>
+        {% endif %}
+
+        <div class="footer">
+            <p>© 2025 Forest Fire Prediction System - A machine learning application for wildfire risk assessment</p>
+        </div>
+    </div>
+</body>
+</html>
